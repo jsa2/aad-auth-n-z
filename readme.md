@@ -13,7 +13,10 @@ This table is provided for reviewing service authentication and authorization se
 
 
 ### MS references 
-MS recommendations below is just subset of many examples - **The emphasis is to highlight the significance on choosing between Azure AD and non-Azure AD authentication options Azure services.**
+MS recommendations below is just subset of many examples - 
+  
+ **⚠ The emphasis is to highlight the significance on choosing between Azure AD and non-Azure AD authentication options Azure services.**
+
 - [IM-2: Manage application identities securely and automatically](https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-identity-management#im-2-manage-application-identities-securely-and-automatically)
 - [Use Azure AD Authentication instead of SQL server authentication in Azure SQL](https://docs.microsoft.com/en-us/azure/security/fundamentals/paas-applications-using-sql)
 - [Microsoft recommends using Azure AD with your Azure Service Bus applications when possible](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas)
