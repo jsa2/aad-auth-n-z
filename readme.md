@@ -25,7 +25,7 @@ MS recommendations below is just subset of many examples. I picked few ones whic
 - [Configure your Azure API Management instance to protect your APIs by using the OAuth 2.0 protocol with Azure AD](https://docs.microsoft.com/en-us/security/benchmark/azure/baselines/api-management-security-baseline#311-monitor-attempts-to-access-deactivated-credentials)
 
 
-**MS sources on string-based password auth**
+**⚠ MS sources on string-based password auth**
 
 - [While function keys can provide some mitigation for unwanted access, the only way to truly secure your function endpoints is by implementing positive authentication of clients accessing your functions.](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#authenticationauthorization)
 - [While it's convenient to use password secrets as a credential, we strongly recommend that you use x509 certificates as the only credential type for getting tokens for your application](https://docs.microsoft.com/en-us/azure/active-directory/develop/security-best-practices-for-app-registration#credential-configuration)
