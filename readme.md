@@ -2,12 +2,13 @@
 
 This is table for reviewing Azure Service Authentication and Authorization cross-service security in Azure. It's made publicly available so it can be referred in any documentation as URL.
 
-- [Azure Service Authentication and authorization table](#azure-service-authentication-and-authorization-table)
+- [Azure Service Authentication and Authorization table](#azure-service-authentication-and-authorization-table)
   - [MS references](#ms-references)
   - [Notes regarding non AAD-based authentication options](#notes-regarding-non-aad-based-authentication-options)
   - [Notes regarding AAD-based authentication options](#notes-regarding-aad-based-authentication-options)
   - [Service Table](#service-table)
 - [Contribution](#contribution)
+- [Disclaimer](#disclaimer)
 
 
 ### MS references 
