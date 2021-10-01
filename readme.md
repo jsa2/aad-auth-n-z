@@ -37,10 +37,10 @@ ____
 ### Notes regarding non AAD-based authentication options
 - All string-based authentication methods in table below are considered **passwords**.
 
-❌Password/String-based authentication is not considered strong in terms of strength, as shown in the table below. Even though security can be increased with password length, and password rotation 
+❌Password/String-based authentication is not considered strong in terms of strength, as shown in the table below. Even though security can be increased with password length, and password rotation.
   -   The table assumes rotation because password can be [leaked](https://msrc-blog.microsoft.com/2021/08/27/update-on-vulnerability-in-the-azure-cosmos-db-jupyter-notebook-feature/)
 
-❌Bypasses  Azure AD logs means that no events are produced for the resource type in Azure AD logs when the authentication mechanism is used
+❌Bypasses  Azure AD logs means that no events are produced for the resource type in Azure AD logs when the authentication mechanism is used.
 
 ❌ Suspectible to sharing across multiple targets in the table means that the service allows human defined password (monkey/dog/cat/birthday) creation, thus allowing the admin to re-use passwords across systems
 - Services which generate these passwords, and don't allow admins to input passwords are considered not shareable in the same sense (not all services in the table can be shared across systems, but can be shared across clients still)
