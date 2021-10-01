@@ -1,12 +1,13 @@
 ## Azure Service Authentication and Authorization table
 
-This is table for reviewing Azure Service Authentication and Authorization cross-service security in Azure. It's made publicly available so it can be referred in any documentation as URL.
+This table is provided for reviewing Azure Service Authentication and Authorization security in Azure, especially cross-service sercurity. It has been made publicly available so it can be referred in any documentation as URL.
 
 - [Azure Service Authentication and Authorization table](#azure-service-authentication-and-authorization-table)
   - [MS references](#ms-references)
   - [Notes regarding non AAD-based authentication options](#notes-regarding-non-aad-based-authentication-options)
   - [Notes regarding AAD-based authentication options](#notes-regarding-aad-based-authentication-options)
   - [Service Table](#service-table)
+  - [Notes](#notes)
 - [Contribution](#contribution)
 - [Disclaimer](#disclaimer)
 
@@ -31,9 +32,9 @@ MS recommendations below is just subset of many examples - **The emphasis is to 
 ____
 
 ### Notes regarding non AAD-based authentication options
-- All string based authentication methods in table below are considered **passwords**.
+- All string-based authentication methods in table below are considered **passwords**.
 
-❌Password/String based authentication is not considered strong in terms of strength, as shown in the table below. Even though security can be increased with password length, and password rotation 
+❌Password/String-based authentication is not considered strong in terms of strength, as shown in the table below. Even though security can be increased with password length, and password rotation 
   -   The table assumes rotation because password can be [leaked](https://msrc-blog.microsoft.com/2021/08/27/update-on-vulnerability-in-the-azure-cosmos-db-jupyter-notebook-feature/)
 
 ❌Bypasses  Azure AD logs means that no events are produced for the resource type in Azure AD logs when the authentication mechanism is used
@@ -62,13 +63,22 @@ ____
 | [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) (Password)  | ✅ | ✅ |✅ | Requires Rotation (supports expiration) | ❌Password based <br> *While it's convenient to use password secrets as a credential, we strongly recommend that you use x509 certificates as the only credential type for getting tokens for your application.* <a href> MS security-best-practices for Credential configuration <a> |  ❌ Suspectible to sharing across multiple targets (while not common, Azure AD ServicePrincipals support user created passwords, which can be shared, and can be weak in strength)
 | [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object)  (Certificate)  | ✅ | ✅  |✅ | Less need for rotation as the service newer exposes the private key when requesting access tokens from Azure AD, still users or service can leak the key (supports expiration) - The key can additionally be protected by password, before it's allowed to form JWT token | ✅  **Strong** (Certificate based)  |  ❌ (Same Private Key could be shared for multiple app registrations)| 
 | [Storage Account key](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal#protect-your-access-keys)  | ❌ Bypasses Azure RBAC |❌ No AAD Log| ✅|Requires Rotation (❌Does not support expiration) |❌Password based |✅ 
-|[SAS Tokens in Logic Apps](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-securing-a-logic-app?tabs=azure-portal#generate-shared-access-signatures-sas)<br> [SAS Tokens in Storage Accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) <br> [SAS Tokens in Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/authorize-access-shared-access-signature#what-are-shared-access-signatures)<br> [SAS Tokens in Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas) | ❌ Bypasses Azure RBAC | ❌ No AAD Log| ✅ | Requires Rotation (supports expiration) | ❌Password based  |✅ 
+|[SAS Tokens in Logic Apps](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-securing-a-logic-app?tabs=azure-portal#generate-shared-access-signatures-sas)<br> [SAS Tokens in Storage Accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) <br> [SAS Tokens in Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/authorize-access-shared-access-signature#what-are-shared-access-signatures)<br> [SAS Tokens in Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas) | ❌ Bypasses Azure RBAC | ❌ No AAD Log| ✅ | Requires Rotation ( [¹](#notes) supports expiration) | ❌Password based  |✅ 
 | SSH Keys|  ❌ Bypasses Azure RBAC |❌ No AAD Log| ✅|  Can be rotated if needed (with PKI) |✅  **Strong** (Certificate based)  |❌ Suspectible to sharing across multiple targets 
 | SSH Passwords|  ❌ Bypasses Azure RBAC |❌ No AAD Log |✅| Requires Rotation (Supports user expiration) |❌Password based   |❌ Suspectible to sharing across multiple targets
 |[PAT Azure DataBricks ](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/api/latest/authentication) <br>[PAT in Azure Devops](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate)|  ❌ Bypasses Azure RBAC |❌ No AAD Log  |✅|   Requires Rotation (supports expiration) |❌Password based |✅ 
 | [SQL Authentication](https://docs.microsoft.com/en-us/azure/azure-sql/database/security-overview#authentication)  |❌ Bypasses Azure RBAC |❌ No AAD Log | ✅|  Requires Rotation (supports expiration)  |❌Password based|❌ Suspectible to  sharing across multiple targets
 | [APIM Subscription Key](https://docs.microsoft.com/en-us/azure/api-management/api-management-subscriptions#what-are-subscriptions)  |❌ Bypasses Azure RBAC | ❌ No AAD Log  |✅|  Requires Rotation  | ❌Password based  |✅ 
 | [Function Access Keys](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys)  |❌ Bypasses Azure RBAC | ❌ Bypasses Azure Azure AD log|✅ | Requires Rotation  | ❌Password based  |✅ 
+
+### Notes
+
+**SAS KEYS**
+
+While SAS keys themselves support expiration, they are often derived from key that does not support expiration. Such  examples are the keys in the connection string of Event Hub and service hubs under shared access policies.
+![img](img/SharedAccessPolicies.png)
+
+![img](img/SharedAccessPoliciesK.png)
 
 ## Contribution
 Feel free to submit pull request for fixing, or adding anything in this document 
