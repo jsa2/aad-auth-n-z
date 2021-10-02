@@ -102,6 +102,8 @@ Security of service connections can be much enhanced by the use of managed ident
 ![img](https://securecloud188323504.files.wordpress.com/2021/04/image-11.png)
 
 #### Certificate option for client credentials
+[*One form of credential that an application can use for authentication is a JSON Web Token (JWT) assertion signed with a certificate that the application owns.*](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-certificate-credentials)
+
 ##### Code examples of client credential with certificate
 **NodeJS**
 - [Azure AD Client Credentials with Certificate - Code Examples for Node.js](https://github.com/jsa2/aadClientCredWithCert#azure-ad-client-credentials-with-certificate---code-examples-for-nodejs)
