@@ -1,6 +1,6 @@
 ## Azure Service Authentication and Authorization table
 
-This table is provided for reviewing service authentication and authorization security in Azure – Especially cross-service sercurity. It has been made publicly available so it can be referred in any documentation as URL.
+This table is provided for reviewing service authentication and authorization security in Azure – Especially cross-service security. It has been made publicly available so it can be referred in any documentation as URL.
 
 - [Azure Service Authentication and Authorization table](#azure-service-authentication-and-authorization-table)
   - [MS references](#ms-references)
