@@ -94,9 +94,11 @@ While SAS keys themselves support expiration, they are often derived from key th
 App registrations are covered by the service principal scenarios in the table. See Service Principal and [types of service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#application-object) 
 
 #### Service connections in Azure Devops
-Security of service connections can be much enhanced by the use of managed identity (self-hosted Devops agent) - and SP (certificate) when MS-hosted pipeline is used
+Security of service connections can be much enhanced by the use of managed identity (self-hosted Devops agent) - and SP (certificate) when MS-hosted pipeline is used.
 
-https://securecloud.blog/2021/04/13/azure-devops-use-certificate-for-azure-service-connection-spn/
+- https://azsk.azurewebsites.net/09-AzureDevOps(VSTS)-Security/ControlCoverage/README.html#service-connection
+
+- https://securecloud.blog/2021/04/13/azure-devops-use-certificate-for-azure-service-connection-spn/
 ![img](https://securecloud188323504.files.wordpress.com/2021/04/image-11.png)
 
 #### Certificate option for client credentials
