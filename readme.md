@@ -8,6 +8,12 @@ This table is provided for reviewing service authentication and authorization se
   - [Notes regarding AAD-based authentication options](#notes-regarding-aad-based-authentication-options)
   - [Service Table](#service-table)
   - [Notes](#notes)
+    - [SAS KEYS](#sas-keys)
+    - [App registrations](#app-registrations)
+    - [Service connections in Azure Devops](#service-connections-in-azure-devops)
+    - [Certificate option for client credentials](#certificate-option-for-client-credentials)
+      - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
+      - [Validation of certificate use by claims in token](#validation-of-certificate-use-by-claims-in-token)
 - [Contribution](#contribution)
 - [Disclaimer](#disclaimer)
 
@@ -64,7 +70,7 @@ ____
 -|-|-|-|-|-|-
 | [Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview#managed-identity-types) | ✅  | ✅ |✅ | ✅  Managed identities do not require rotation | ✅  **Strong** (Certificate based) | ✅ * When using system assigned managed identity 
 | [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) (Password)  | ✅ | ✅ |✅ | Requires Rotation (supports expiration) | ❌Password based <br> *While it's convenient to use password secrets as a credential, we strongly recommend that you use x509 certificates as the only credential type for getting tokens for your application.* <a href=https://docs.microsoft.com/en-us/azure/active-directory/develop/security-best-practices-for-app-registration#credential-configuration> MS security-best-practices for Credential configuration <a> |  ❌ Suspectible to sharing across multiple targets (while not common, Azure AD ServicePrincipals support user created passwords, which can be shared, and can be weak in strength)
-| [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object)  (Certificate)  | ✅ | ✅  |✅ | Less need for rotation as the service newer exposes the private key when requesting access tokens from Azure AD, still users or service can leak the key (supports expiration) - The key can additionally be protected by password, before it's allowed to form JWT token | ✅  **Strong** (Certificate based)  |  ❌ (Same Private Key could be shared for multiple app registrations)| 
+| [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object)  (Certificate)  | ✅ | ✅  |✅ | Less need for rotation as the service newer exposes the private key when requesting access tokens from Azure AD, still users or service can leak the key (supports expiration) - The key can additionally be protected by password, before it's allowed to form JWT token | ✅  **Strong** (Certificate based) [cert options](#certificate-option-for-client-credentials)  |  ❌ (Same Private Key could be shared for multiple app registrations)| 
 | [Storage Account key](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal#protect-your-access-keys)  | ❌ Bypasses Azure RBAC |❌ No AAD Log| ✅|Requires Rotation (❌Does not support expiration) |❌Password based |✅ 
 |[SAS Tokens in Logic Apps](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-securing-a-logic-app?tabs=azure-portal#generate-shared-access-signatures-sas)<br> [SAS Tokens in Storage Accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) <br> [SAS Tokens in Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/authorize-access-shared-access-signature#what-are-shared-access-signatures)<br> [SAS Tokens in Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas) | ❌ Bypasses Azure RBAC | ❌ No AAD Log| ✅ | Requires Rotation ( [¹](#notes) supports expiration) | ❌Password based  |✅ 
 | SSH Keys|  ❌ Bypasses Azure RBAC |❌ No AAD Log| ✅|  Can be rotated if needed (with PKI) |✅  **Strong** (Certificate based)  |❌ Suspectible to sharing across multiple targets 
@@ -76,13 +82,34 @@ ____
 
 ### Notes
 
-**SAS KEYS**
+#### SAS KEYS
 
 While SAS keys themselves support expiration, they are often derived from key that does not support expiration. Such  examples are the keys in the connection string of Event Hub and service hubs under shared access policies.
 
 ![img](img/SharedAccessPolicies.png)
 
 ![img](img/SharedAccessPoliciesK.png)
+
+#### App registrations
+App registrations are covered by the service principal scenarios in the table. See Service Principal and [types of service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#application-object) 
+
+#### Service connections in Azure Devops
+Security of service connections can be much enhanced by the use of managed identity (self-hosted Devops agent) - and SP (certificate) when MS-hosted pipeline is used
+
+https://securecloud.blog/2021/04/13/azure-devops-use-certificate-for-azure-service-connection-spn/
+![img](https://securecloud188323504.files.wordpress.com/2021/04/image-11.png)
+
+#### Certificate option for client credentials
+##### Code examples of client credential with certificate
+**NodeJS**
+- [Azure AD Client Credentials with Certificate - Code Examples for Node.js](https://github.com/jsa2/aadClientCredWithCert#azure-ad-client-credentials-with-certificate---code-examples-for-nodejs)
+- [service-principal and certificate based login by providing an ABSOLUTE file path to the .pem file](https://github.com/Azure/ms-rest-nodeauth#service-principal-and-certificate-based-login-by-providing-an-absolute-file-path-to-the-pem-file)
+##### Validation of certificate use by claims in token
+Any SP that uses certificate credential in client credential flow can be validated to have used the certificate after token validation by inspecting the ``appidacr`` claim.
+
+https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certificate-in-client-credentials-flow/
+![img](https://securecloud188323504.files.wordpress.com/2021/01/apim.png)
+
 
 ## Contribution
 Feel free to submit pull request for fixing, or adding anything in this document 
