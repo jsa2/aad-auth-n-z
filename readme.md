@@ -124,7 +124,7 @@ Requiring user assignment on Service Principal settings prevents arbitrary clien
 ✅ Setting on GUI
 ![img](img/SPN-UserAssignemtn1.png)
 
-If this setting is not enabled arbitrary SPN's registered in the tenant with client credentials be they single or multi-tenant origin can request valid tokens for apps that don't do internal ACL for permissions (or require user assigment). 
+If this setting is not enabled arbitrary SPN's registered in the tenant with client credentials(be they single or multi-tenant origin), the spn can request valid tokens for apps that don't do internal ACL for permissions (or require user assigment). 
 
 - [Reference 1](https://joonasw.net/view/cross-tenant-token-attacks-now-harder-in-azure-ad)
 
