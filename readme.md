@@ -116,7 +116,7 @@ https://joonasw.net/view/always-check-token-permissions-in-aad-protected-api
 
 - Mitigation by user assignment 
 
-Requiring user assignment on Service Principal settings prevents arbitrary client credential enabled apps from being issued tokens with the correct audience for the attacker.  
+Requiring user assignment on Service Principal settings prevents arbitrary client credential enabled apps from being issued tokens with the correct audience for the attacker. The mitigation was originally proposed by [Johan Lindroos](https://www.linkedin.com/in/johanlindroos/)
 
 ✅ Setting on graph API
 ![img](img/SPN-UserAssignemtn.png)
