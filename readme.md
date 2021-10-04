@@ -103,16 +103,24 @@ Ensure security operations such IP-filtering and authn/z related policies are re
 #### Require user assigment on applications by default and check permissions
 
 
-**Attack scenario**
+- Attack scenario
 
-This attack is possible in apps that don't check claims beyond the audience and issuer value for tokens issued to client credential enabled SPN's. Mitigation is to implement proper checking of claims, and/or requiring user assignment on the API.
+This attack is possible against API's that don't check claims beyond the audience and issuer value for tokens issued to client credential enabled SPN's. Mitigation is to implement proper checking of claims, and/or requiring user assignment on the API. 
+- Attacker is any SPN **registered** in the tenant which has client credentials registered.
 
 ![img](img/arbitrary%20SPN%20attack.png)
+
+- Mitigation by proper claims checking
+
+https://joonasw.net/view/always-check-token-permissions-in-aad-protected-api
+
+- Mitigation by user assignment 
 
 Requiring user assignment on Service Principal settings prevents arbitrary client credential enabled apps from being issued tokens with the correct audience for the attacker.  
 
 ✅ Setting on graph API
 ![img](img/SPN-UserAssignemtn.png)
+
 ✅ Setting on GUI
 ![img](img/SPN-UserAssignemtn1.png)
 
