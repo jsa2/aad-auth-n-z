@@ -10,6 +10,8 @@ This table is provided for reviewing service authentication and authorization se
   - [Notes](#notes)
     - [SAS KEYS](#sas-keys)
     - [App registrations](#app-registrations)
+    - [API management](#api-management)
+    - [Require user assigment on applications by default and check permissions](#require-user-assigment-on-applications-by-default-and-check-permissions)
     - [Service connections in Azure Devops](#service-connections-in-azure-devops)
     - [Certificate option for client credentials](#certificate-option-for-client-credentials)
       - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
@@ -92,6 +94,38 @@ While SAS keys themselves support expiration, they are often derived from key th
 
 #### App registrations
 App registrations are covered by the service principal scenarios in the table. See Service Principal and [types of service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#application-object) 
+
+
+#### API management 
+Ensure security operations such IP-filtering and authn/z related policies are required in **'All operations'** level. This ensures, that newly created operations will inherit the security policies of the API.
+![img](img/APIM.png)
+
+#### Require user assigment on applications by default and check permissions
+
+
+**Attack scenario**
+
+This attack is possible in apps that don't check claims beyond the audience and issuer value for tokens issued to client credential enabled SPN's. Mitigation is to implement proper checking of claims, and/or requiring user assignment on the API.
+
+![img](img/arbitrary%20SPN%20attack.png)
+
+Requiring user assignment on Service Principal settings prevents arbitrary client credential enabled apps from being issued tokens with the correct audience for the attacker.  
+
+✅ Setting on graph API
+![img](img/SPN-UserAssignemtn.png)
+✅ Setting on GUI
+![img](img/SPN-UserAssignemtn1.png)
+
+If this setting is not enabled arbitrary SPN's registered in the tenant with client credentials be they single or multi-tenant origin can request valid tokens for apps that don't do internal ACL for permissions (or require user assigment). 
+
+- [Reference 1](https://joonasw.net/view/cross-tenant-token-attacks-now-harder-in-azure-ad)
+
+*"But what if we did have an identity in the target tenant? If we could somehow trick a user in the organization to consent to our app, could we do the attack as before? Yes, we could. As long as a service principal for your app exists in the target tenant, you can acquire an access token for any API in that tenant."* 
+
+- [Reference 2](https://joonasw.net/view/always-check-token-permissions-in-aad-protected-api)
+![img](img/joonasw.png)
+
+
 
 #### Service connections in Azure Devops
 Security of service connections can be much enhanced by the use of managed identity (self-hosted Devops agent) - and SP (certificate) when MS-hosted pipeline is used.
