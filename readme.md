@@ -99,7 +99,9 @@ To facilitate many of the deployment scenarios Azure App Service uses under the 
 
 Essentially these credentials are used for two scenarios Basic auth string in authorization header ``Authorization: 'Basic YWRtaW5pc3RyYXRvcjpwYXNzd29yZA==``  for the SCM web api, and same deployment credentials FTP based, but passed in FTP protocol
 
-##### Bypassing Azure AD with indirect access to Azure Key Vault References 
+##### Bypassing Azure AD with indirect access to Azure Key Vault References
+
+⚠ Note: This bypass is based on **indirect access**. Azure Key Vault itself is not suspectible to non-azure-ad based access, and neither do the secrets exist outside runtime platform anywhere 
 
 1. Attacker uses Basic Auth (publishingUserName and publishingPassword) to access directly key vault references that are loaded for runtime in the SCM API
 
@@ -124,8 +126,6 @@ async function mfaBypassToGetKeyVaultReferences(publishingUserName, publishingPa
  
 ##### Secure the SCM endpoint for CI/CD
 Since many of the automations use these credentials, and publishing to app service does not directly support strong authentication supporting authorization mechnisms (Validation of JWT token in authorization header) it's important that once app is deployed you don't leave the endpoints open for exploitation. 
-
-⚠ Note: This bypass is based on **indirect access**. Azure Key Vault itself is not suspectible to non-azure-ad based access, and neither do the secrets exist outside runtime platform anywhere 
  
 ✅ Make securing non Azure AD backed endpoint part of your continous integration (If requested, I can add Azure Pipelines example)
 
