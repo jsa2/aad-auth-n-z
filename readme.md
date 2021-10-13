@@ -12,6 +12,7 @@ This table is provided for reviewing service authentication and authorization se
     - [App Service Deployment Credentials](#app-service-deployment-credentials)
       - [Bypassing Azure AD with indirect access to Azure Key Vault References](#bypassing-azure-ad-with-indirect-access-to-azure-key-vault-references)
       - [Secure the SCM endpoint for CI/CD](#secure-the-scm-endpoint-for-cicd)
+    - [SQL authentication and 'Allow Azure services and resources to access this server'](#sql-authentication-and-allow-azure-services-and-resources-to-access-this-server)
     - [SAS KEYS](#sas-keys)
     - [App registrations](#app-registrations)
     - [API management](#api-management)
@@ -137,6 +138,13 @@ Since many of the automations use these credentials, and publishing to app servi
 2. [Network restriction on SCM endpoint](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#secure-the-scm-endpoint)
 *When you use network isolation to secure your functions, you must also account for this endpoint.*
 
+#### SQL authentication and 'Allow Azure services and resources to access this server'
+
+ “Allow Azure services and resources to access this server” setting for SQL allows a trivial bypass for SQL firewall. Essentially the if attacker gets the SQL connection string, the protection by network rules does very little to protect from compromise, as the attacker can mount the attack from within Azure.
+
+ - Many Azure Services rely on this setting to consume Azure SQL. Consider using this setting only if managed identities / Azure AD based identities are used to consume Azure SQL database
+
+![img](/img/Allow%20Azure%20services%20and%20resources%20to%20access%20this%20server.png)
 
 #### SAS KEYS
 
