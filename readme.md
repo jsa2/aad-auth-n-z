@@ -142,7 +142,9 @@ Since many of the automations use these credentials, and publishing to app servi
 
  “Allow Azure services and resources to access this server” setting for SQL allows a trivial bypass for SQL firewall. Essentially the if attacker gets the SQL connection string, the protection by network rules does very little to protect from compromise, as the attacker can mount the attack from within Azure.
 
- - Many Azure Services rely on this setting to consume Azure SQL. Consider using this setting only if managed identities / Azure AD based identities are used to consume Azure SQL database
+ - Many Azure Services rely on this setting to consume Azure SQL. Consider using this setting only if managed identities / Azure AD based identities are used to consume Azure SQL database. 
+   
+    Using Azure AD based identity based on strong authentcation to consume SQL ensures, that even if the firewall was bypassed, the attacker would need to get access tokens issued for the managed identity to continue the attack.
 
 ![img](/img/Allow%20Azure%20services%20and%20resources%20to%20access%20this%20server.png)
 
