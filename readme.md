@@ -13,6 +13,7 @@ This table is provided for reviewing service authentication and authorization se
       - [Bypassing Azure AD with indirect access to Azure Key Vault References](#bypassing-azure-ad-with-indirect-access-to-azure-key-vault-references)
       - [Secure the SCM endpoint for CI/CD](#secure-the-scm-endpoint-for-cicd)
     - [SQL authentication and 'Allow Azure services and resources to access this server'](#sql-authentication-and-allow-azure-services-and-resources-to-access-this-server)
+- [!img](#)
     - [SAS KEYS](#sas-keys)
     - [App registrations](#app-registrations)
     - [API management](#api-management)
@@ -147,6 +148,13 @@ Since many of the automations use these credentials, and publishing to app servi
     Using Azure AD based identity based on strong authentcation to consume SQL ensures, that even if the firewall was bypassed, the attacker would need to get access tokens issued for the managed identity to continue the attack.
 
 ![img](/img/Allow%20Azure%20services%20and%20resources%20to%20access%20this%20server.png)
+-- 
+
+**MS reference**
+
+*Switching the setting to ON creates an inbound firewall rule for IP 0.0.0.0 - 0.0.0.0 named AllowAllWindowsAzureIps*
+[link](https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-configure#connections-from-inside-azure)
+![img](img/sqldocsref.png)
 
 #### SAS KEYS
 
