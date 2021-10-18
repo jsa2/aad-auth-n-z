@@ -202,6 +202,8 @@ If this setting is not enabled arbitrary SPN's registered in the tenant with cli
 
 #### Azure DevOps - Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation
 
+![img](img/cap.png)
+
 ⚠ Carefully review and evaluate this control in test environment before enabling it on production
 
 **MS references** [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops)
@@ -210,10 +212,16 @@ If this setting is not enabled arbitrary SPN's registered in the tenant with cli
 
 Since the usage of PAT token is essentially basic auth, you might want to limit the usage of long-lived PAT's created for automations running outside Azure Devops. You can to this by enabling Conditional Access for non web-flows¹  
 
-![img](img/cap.png)
+[Personal Access Tokens and basic authentication](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=current-page#use-a-pat)
+![img](img/devops-pat.png)
 
-⚠ Beware that enabling IP-restrictions for PAT tokens affect also GIT clients that use short-lived PAT tokens after initial Azure AD authentication. Based on my testing usage of PAT tokens can't be excluded by advanced conditions like device filtering. Only IP and user exclusion seems to work. Read [CA For PAT](guides/devopsCAP.md)
+
+⚠ Beware that enabling IP-restrictions for PAT tokens affect also GIT clients that use short-lived PAT tokens after initial Azure AD authentication. Based on my testing usage of PAT tokens can't be excluded by advanced conditions like device filtering. Only IP and user exclusion seems to work. 
 ![img](img/pat3.PNG)
+
+**Conditional Acces example**
+Read [CA For PAT](guides/devopsCAP.md)
+
 
 ¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully you PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
 
@@ -230,10 +238,6 @@ Since the usage of PAT token is essentially basic auth, you might want to limit 
 
 [Enable Azure Active Directory (Azure AD) Conditional Access Policy (CAP) validation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops#security-policies)
 - *this policy is set to off by default and only applies to other authentication methods aside from the web flow.*
-
-[Personal Access Tokens and basic authentication](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=current-page#use-a-pat)
-![img](img/devops-pat.png)
-
 
 ---
 
