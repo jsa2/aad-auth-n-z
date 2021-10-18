@@ -202,7 +202,9 @@ If this setting is not enabled arbitrary SPN's registered in the tenant with cli
 
 #### Azure DevOps - Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation
 
-⚠ Carefully review this control and [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops) before enabling this setting. 
+⚠ Carefully review and evaluate this control in test environment before enabling it on production
+
+**MS references** [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops)
 
 **Background**
 
@@ -210,7 +212,7 @@ Since the usage of PAT token is essentially basic auth, you might want to limit 
 
 ![img](img/cap.png)
 
-⚠ Beware that enabling IP-restrictions for PAT tokens affect also GIT clients that use short-lived PAT tokens after initial Azure AD authentication. Based on my testing usage of PAT tokens can't be excluded by such conditions like device. Only IP and user exclusion seems to work. Read [CA For PAT](guides/devopsCAP.md)
+⚠ Beware that enabling IP-restrictions for PAT tokens affect also GIT clients that use short-lived PAT tokens after initial Azure AD authentication. Based on my testing usage of PAT tokens can't be excluded by advanced conditions like device filtering. Only IP and user exclusion seems to work. Read [CA For PAT](guides/devopsCAP.md)
 ![img](img/pat3.PNG)
 
 ¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully you PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
