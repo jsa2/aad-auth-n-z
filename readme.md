@@ -17,6 +17,7 @@ This table is provided for reviewing service authentication and authorization se
     - [API management](#api-management)
     - [Require user assigment on applications by default and check permissions](#require-user-assigment-on-applications-by-default-and-check-permissions)
     - [Azure DevOps - Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation](#azure-devops---ensure-pat-tokens-are-evaluated-with-conditional-access-policy-cap-validation)
+      - [FootNote](#footnote)
     - [Service connections in Azure Devops](#service-connections-in-azure-devops)
     - [Certificate option for client credentials](#certificate-option-for-client-credentials)
       - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
@@ -210,7 +211,7 @@ If this setting is not enabled arbitrary SPN's registered in the tenant with cli
 
 **Background**
 
-Since the usage of PAT token is essentially basic auth, you might want to limit the usage of long-lived PAT's created for automations running outside Azure Devops. You can to this by enabling Conditional Access for non web-flows¹  
+Since the usage of PAT token is essentially basic auth, you might want to limit the usage of long-lived PAT's created for automations running outside Azure Devops. You can to this by enabling Conditional Access for non web-flows [¹](#footnote)  
 
 [Personal Access Tokens and basic authentication](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=current-page#use-a-pat)
 ![img](img/devops-pat.png)
@@ -221,9 +222,6 @@ Since the usage of PAT token is essentially basic auth, you might want to limit 
 
 **Conditional Acces example**
 Read [CA For PAT](guides/devopsCAP.md)
-
-
-¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully any PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
 
 [*Azure AD Conditional Access is applied for the web flow regardless of this policy setting.*](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops#security-policies)
 
@@ -238,6 +236,10 @@ Read [CA For PAT](guides/devopsCAP.md)
 
 [Enable Azure Active Directory (Azure AD) Conditional Access Policy (CAP) validation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops#security-policies)
 - *this policy is set to off by default and only applies to other authentication methods aside from the web flow.*
+
+
+##### FootNote 
+¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully any PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
 
 ---
 
