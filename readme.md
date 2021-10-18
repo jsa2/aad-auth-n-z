@@ -12,19 +12,18 @@ This table is provided for reviewing service authentication and authorization se
     - [App Service Deployment Credentials](#app-service-deployment-credentials)
       - [Bypassing Azure AD with indirect access to Azure Key Vault References](#bypassing-azure-ad-with-indirect-access-to-azure-key-vault-references)
       - [Secure the SCM endpoint for CI/CD](#secure-the-scm-endpoint-for-cicd)
-    - [SQL authentication and 'Allow Azure services and resources to access this server'](#sql-authentication-and-allow-azure-services-and-resources-to-access-this-server)
-- [!img](#)
     - [SAS KEYS](#sas-keys)
     - [App registrations](#app-registrations)
     - [API management](#api-management)
     - [Require user assigment on applications by default and check permissions](#require-user-assigment-on-applications-by-default-and-check-permissions)
+    - [Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation](#ensure-pat-tokens-are-evaluated-with-conditional-access-policy-cap-validation)
     - [Service connections in Azure Devops](#service-connections-in-azure-devops)
     - [Certificate option for client credentials](#certificate-option-for-client-credentials)
       - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
       - [Validation of certificate use by claims in token](#validation-of-certificate-use-by-claims-in-token)
+    - [SQL authentication and 'Allow Azure services and resources to access this server'](#sql-authentication-and-allow-azure-services-and-resources-to-access-this-server)
 - [Contribution](#contribution)
 - [Disclaimer](#disclaimer)
-
 
 ### MS references 
 MS recommendations below is just subset of many examples. I picked few ones which are really driving the point of trying to avoid password (string-based) options. 
@@ -139,22 +138,7 @@ Since many of the automations use these credentials, and publishing to app servi
 2. [Network restriction on SCM endpoint](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#secure-the-scm-endpoint)
 *When you use network isolation to secure your functions, you must also account for this endpoint.*
 
-#### SQL authentication and 'Allow Azure services and resources to access this server'
-
- “Allow Azure services and resources to access this server” setting for SQL allows a trivial bypass for SQL firewall. Essentially the if attacker gets the SQL connection string, the protection by network rules does very little to protect from compromise, as the attacker can mount the attack from within Azure.
-
- - Many Azure Services rely on this setting to consume Azure SQL. Consider using this setting only if managed identities / Azure AD based identities are used to consume Azure SQL database. 
-   
-    Using Azure AD based identity based on strong authentcation to consume SQL ensures, that even if the firewall was bypassed, the attacker would need to get access tokens issued for the managed identity to continue the attack.
-
-![img](/img/Allow%20Azure%20services%20and%20resources%20to%20access%20this%20server.png)
--- 
-
-**MS reference**
-
-*Switching the setting to ON creates an inbound firewall rule for IP 0.0.0.0 - 0.0.0.0 named AllowAllWindowsAzureIps*
-[link](https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-configure#connections-from-inside-azure)
-![img](img/sqldocsref.png)
+---
 
 #### SAS KEYS
 
@@ -164,13 +148,22 @@ While SAS keys themselves support expiration, they are often derived from key th
 
 ![img](img/SharedAccessPoliciesK.png)
 
+
+Read more here https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas#shared-access-authorization-policies
+
+
+---
+
 #### App registrations
 App registrations are covered by the service principal scenarios in the table. See Service Principal and [types of service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#application-object) 
 
+---
 
 #### API management 
 Ensure security operations such IP-filtering and authn/z related policies are required in **'All operations'** level. This ensures, that newly created operations will inherit the security policies of the API.
 ![img](img/APIM.png)
+
+---
 
 #### Require user assigment on applications by default and check permissions
 
@@ -205,6 +198,41 @@ If this setting is not enabled arbitrary SPN's registered in the tenant with cli
 - [Reference 2](https://joonasw.net/view/always-check-token-permissions-in-aad-protected-api)
 ![img](img/joonasw.png)
 
+---
+
+#### Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation
+
+⚠ Carefully review this control and [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops) before enabling this setting. 
+
+**Background**
+
+Since the usage of PAT token is essentially basic auth, you might want to limit the usage of long-lived PAT's created for automations running outside Azure Devops. You can to this by enabling Conditional Access for non web-flows¹  
+
+![img](img/cap.png)
+
+⚠ Beware that enabling IP-restrictions for PAT tokens affect also GIT clients that use short-lived PAT tokens after initial Azure AD authentication. Based on my testing usage of PAT tokens can't be excluded by such conditions like device. Only IP and user exclusion seems to work. Read [CA For PAT](guides/devopsCAP.md)
+![img](img/pat3.PNG)
+
+¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully you PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
+
+[*Azure AD Conditional Access is applied for the web flow regardless of this policy setting.*](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops#security-policies)
+
+![img](img/patcap.png)
+
+
+- There is also possibility of [restricting the lifetime of PAT tokens](https://docs.microsoft.com/en-us/azure/devops/release-notes/2021/sprint-188-update#restrict-personal-access-token-pat-scope-and-lifespan-via-azure-ad-tenant-policy), but this might require extensive work for long-running automations that do not use the build-agents built-in OAuth2 based flows and are excluded from CA based on 'named location' 
+  - Automation would require PAT token renewal mechanism (That does not rely on another PAT token)
+![img](img/leakedPAT.png)
+
+**MS Documentation on the subject**
+
+[Enable Azure Active Directory (Azure AD) Conditional Access Policy (CAP) validation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops#security-policies)
+- *this policy is set to off by default and only applies to other authentication methods aside from the web flow.*
+
+[Personal Access Tokens and basic authentication](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=current-page#use-a-pat)
+![img](img/devops-pat.png)
+
+
 
 
 #### Service connections in Azure Devops
@@ -227,6 +255,30 @@ Any SP that uses certificate credential in client credential flow can be validat
 
 https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certificate-in-client-credentials-flow/
 ![img](https://securecloud188323504.files.wordpress.com/2021/01/apim.png)
+
+
+#### SQL authentication and 'Allow Azure services and resources to access this server'
+
+ “Allow Azure services and resources to access this server” setting for SQL allows a trivial bypass for SQL firewall. Essentially the if attacker gets the SQL connection string, the protection by network rules does very little to protect from compromise, as the attacker can mount the attack from within Azure.
+
+ - Many Azure Services rely on this setting to consume Azure SQL. Consider using this setting only if managed identities / Azure AD based identities are used to consume Azure SQL database. 
+   
+    Using Azure AD based identity based on strong authentcation to consume SQL ensures, that even if the firewall was bypassed, the attacker would need to get access tokens issued for the managed identity to continue the attack.
+
+![img](/img/Allow%20Azure%20services%20and%20resources%20to%20access%20this%20server.png)
+
+--- 
+
+**MS reference**
+
+*Switching the setting to ON creates an inbound firewall rule for IP 0.0.0.0 - 0.0.0.0 named AllowAllWindowsAzureIps*
+
+[link](https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-configure#connections-from-inside-azure)
+
+![img](img/sqldocsref.png)
+
+
+SQL
 
 
 ## Contribution
