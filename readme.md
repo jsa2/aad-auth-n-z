@@ -16,7 +16,7 @@ This table is provided for reviewing service authentication and authorization se
     - [App registrations](#app-registrations)
     - [API management](#api-management)
     - [Require user assigment on applications by default and check permissions](#require-user-assigment-on-applications-by-default-and-check-permissions)
-    - [Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation](#ensure-pat-tokens-are-evaluated-with-conditional-access-policy-cap-validation)
+    - [Azure DevOps - Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation](#azure-devops---ensure-pat-tokens-are-evaluated-with-conditional-access-policy-cap-validation)
     - [Service connections in Azure Devops](#service-connections-in-azure-devops)
     - [Certificate option for client credentials](#certificate-option-for-client-credentials)
       - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
@@ -200,7 +200,7 @@ If this setting is not enabled arbitrary SPN's registered in the tenant with cli
 
 ---
 
-#### Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation
+#### Azure DevOps - Ensure PAT tokens are evaluated with Conditional Access Policy (CAP) validation
 
 ⚠ Carefully review this control and [Microsoft Documentation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops) before enabling this setting. 
 
