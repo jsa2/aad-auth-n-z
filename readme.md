@@ -235,7 +235,7 @@ Since the usage of PAT token is essentially basic auth, you might want to limit 
 ![img](img/devops-pat.png)
 
 
-
+---
 
 #### Service connections in Azure Devops
 Security of service connections can be much enhanced by the use of managed identity (self-hosted Devops agent) - and SP (certificate) when MS-hosted pipeline is used.
