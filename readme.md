@@ -223,7 +223,7 @@ Since the usage of PAT token is essentially basic auth, you might want to limit 
 Read [CA For PAT](guides/devopsCAP.md)
 
 
-¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully you PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
+¹ If you have 'all apps' type Conditional Access Policy, web flows are already protected by Conditional Access, regardless of the CAP setting in Azure Devops. Review carefully any PAT token usage, before enabling the policy: [example](guides/devopsCAP.md)
 
 [*Azure AD Conditional Access is applied for the web flow regardless of this policy setting.*](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/change-application-access-policies?view=azure-devops#security-policies)
 
