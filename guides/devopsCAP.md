@@ -1,6 +1,6 @@
 
 
-[img](../readme.md)
+[Go back to main article](../readme.md)
 
 ⚠ **WARNING**: If you are using PAT's inside your pipelines to communicate with Azure Devops API's, instead of the build objects permissions and OAuth2 Access Tokens ``SYSTEM_ACCESSTOKEN: $(Build.SourceBranch)`` Then it is recommended to ensure, that the [IP's](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml#to-identify-the-possible-ip-ranges-for-microsoft-hosted-agents) used are part of CAP 'Named locations'
 
