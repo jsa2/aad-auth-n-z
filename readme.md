@@ -23,6 +23,7 @@ This table is provided for reviewing service authentication and authorization se
       - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
       - [Validation of certificate use by claims in token](#validation-of-certificate-use-by-claims-in-token)
     - [SQL authentication and 'Allow Azure services and resources to access this server'](#sql-authentication-and-allow-azure-services-and-resources-to-access-this-server)
+    - [Auditing local authentication with Azure Policy](#auditing-local-authentication-with-azure-policy)
 - [Contribution](#contribution)
 - [Disclaimer](#disclaimer)
 
@@ -80,15 +81,28 @@ ____
 | [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object) (Password)  | ✅ | ✅ |✅ | Requires Rotation (supports expiration) | ❌Password based <br> *While it's convenient to use password secrets as a credential, we strongly recommend that you use x509 certificates as the only credential type for getting tokens for your application.* <a href=https://docs.microsoft.com/en-us/azure/active-directory/develop/security-best-practices-for-app-registration#credential-configuration> MS security-best-practices for Credential configuration <a> |  ❌ Suspectible to sharing across multiple targets (while not common, Azure AD ServicePrincipals support user created passwords, which can be shared, and can be weak in strength)
 | [Service Principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#service-principal-object)  (Certificate)  | ✅ | ✅  |✅ | Less need for rotation as the service newer exposes the private key when requesting access tokens from Azure AD, still users or service can leak the key (supports expiration) - The key can additionally be protected by password, before it's allowed to form JWT token | ✅  **Strong** (Certificate based) [cert options](#certificate-option-for-client-credentials)  |  ❌ (Same Private Key could be shared for multiple app registrations)| 
 | [Storage Account key](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal#protect-your-access-keys)  | ❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) |❌ No AAD Log| ✅|Requires Rotation (❌Does not support expiration) |❌Password based |✅ 
+
+--- 
+Table continues
+
+**Service**|Azure AD & RBAC based | Logged in Azure AD | Logged in service specific logs | Rotation needed | Strength | Tied to resource lifecycle
+-|-|-|-|-|-|-
 |[SAS Tokens in Logic Apps](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-securing-a-logic-app?tabs=azure-portal#generate-shared-access-signatures-sas)<br> [SAS Tokens in Storage Accounts](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) <br> [SAS Tokens in Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/authorize-access-shared-access-signature#what-are-shared-access-signatures)<br> [SAS Tokens in Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas) | ❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) | ❌ No AAD Log| ✅ | Requires Rotation ( [¹](#notes) supports expiration) | ❌Password based  |✅ 
 | SSH Keys|  ❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) |❌ No AAD Log| ✅|  Can be rotated if needed (with PKI) |✅  **Strong** (Certificate based)  |❌ Suspectible to sharing across multiple targets 
 | SSH Passwords|  ❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) |❌ No AAD Log |✅| Requires Rotation (Supports user expiration) |❌Password based   |❌ Suspectible to sharing across multiple targets
 |[PAT Azure DataBricks ](https://docs.microsoft.com/en-us/azure/databricks/dev-tools/api/latest/authentication) <br>[PAT in Azure Devops](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate)|  ❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) |❌ No AAD Log  |✅|   Requires Rotation (supports expiration) |❌Password based |✅ 
 | [SQL Authentication](https://docs.microsoft.com/en-us/azure/azure-sql/database/security-overview#authentication)  |❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) |❌ No AAD Log | ✅|  Requires Rotation (supports expiration)  |❌Password based|❌ Suspectible to  sharing across multiple targets
+
+--- 
+Table continues
+
+**Service**|Azure AD & RBAC based | Logged in Azure AD | Logged in service specific logs | Rotation needed | Strength | Tied to resource lifecycle
+-|-|-|-|-|-|-
 | [APIM Subscription Key](https://docs.microsoft.com/en-us/azure/api-management/api-management-subscriptions#what-are-subscriptions)  |❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) | ❌ No AAD Log  |✅|  Requires Rotation  | ❌Password based  |✅ 
 | [Function Access Keys](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys)  |❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) | ❌ Bypasses Azure Azure AD log|✅ | Requires Rotation  | ❌Password based  |✅ 
 [App Service Webdeploy (Basic Auth)](https://docs.microsoft.com/en-us/azure/app-service/deploy-configure-credentials?tabs=cli#disable-basic-authentication) |❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) | ❌ No AAD Log  |✅|  Requires Rotation  | ❌Password based  |✅ 
 [App Service Webdeploy (FTP)](https://docs.microsoft.com/en-us/azure/app-service/deploy-configure-credentials?tabs=cli#ftp) |❌ Bypasses Azure RBAC [note ¹](#fetching-non-azure-ad-based-credentials-with-initial-azure-ad-authentication) | ❌ No AAD Log  |✅|  Requires Rotation  | ❌Password based  |✅ 
+[AKS management with ``--admin`` option](https://docs.microsoft.com/en-us/azure/aks/managed-aad#disable-local-accounts) | 📑 Initial sign-in is Azure RBAC when Azure RBAC is used | 📑 No AAD log after initial sign-in|✅ |Requires rotation [Rotate certificates in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/certificate-rotation#aks-certificates-certificate-authorities-and-service-accounts) | ✅ Strong (Certificate based) |📑 Unlikely to be shared, as the AKS creates it's own CA
 
 
 ### Notes 
@@ -286,7 +300,8 @@ https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certific
 ![img](img/sqldocsref.png)
 
 
-SQL
+
+#### Auditing local authentication with Azure Policy
 
 
 ## Contribution
