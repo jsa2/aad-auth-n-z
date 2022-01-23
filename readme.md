@@ -310,6 +310,8 @@ az policy set-definition create -n Audit_Local_Authentication_Audit_Set \
 --definitions https://raw.githubusercontent.com/jsa2/aad-auth-n-z/main/guides/localAuthPolicy/localAuthd.json
 
 ```
+  
+![image](https://user-images.githubusercontent.com/58001986/150668653-d9809c1d-52aa-4bca-8e40-b361485c6ec3.png)
 
 
 ## Contribution
