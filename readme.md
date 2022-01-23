@@ -23,6 +23,7 @@ This table is provided for reviewing service authentication and authorization se
       - [Code examples of client credential with certificate](#code-examples-of-client-credential-with-certificate)
       - [Validation of certificate use by claims in token](#validation-of-certificate-use-by-claims-in-token)
     - [SQL authentication and 'Allow Azure services and resources to access this server'](#sql-authentication-and-allow-azure-services-and-resources-to-access-this-server)
+- [SQL](#sql)
     - [Auditing local authentication with Azure Policy](#auditing-local-authentication-with-azure-policy)
 - [Contribution](#contribution)
 - [Disclaimer](#disclaimer)
@@ -289,6 +290,8 @@ https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certific
 
 ![img](/img/Allow%20Azure%20services%20and%20resources%20to%20access%20this%20server.png)
 
+
+SQL
 --- 
 
 **MS reference**
@@ -302,7 +305,10 @@ https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certific
 
 
 #### Auditing local authentication with Azure Policy
-- AZ CLI in bash based on [az policy set-definition](https://docs.microsoft.com/en-us/cli/azure/policy/set-definition?view=azure-cli-latest#az-policy-set-definition-create-examples)
+
+Documentation [az policy set-definition](https://docs.microsoft.com/en-us/cli/azure/policy/set-definition?view=azure-cli-latest#az-policy-set-definition-create-examples)
+
+Following AZ CLI command will deploy the policy initiative
 
 ```shell
 az policy set-definition create -n Audit_Local_Authentication_Audit_Set \
@@ -311,6 +317,8 @@ az policy set-definition create -n Audit_Local_Authentication_Audit_Set \
 
 ```
   
+After running the Azure CLI command you should see following set displayed in Azure Policy. You can then proceed to assign the policy at scope you deem suitable 
+
 ![image](https://user-images.githubusercontent.com/58001986/150668653-d9809c1d-52aa-4bca-8e40-b361485c6ec3.png)
 
 
