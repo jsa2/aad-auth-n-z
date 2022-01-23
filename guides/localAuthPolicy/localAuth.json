@@ -1,4 +1,4 @@
-[{"policyDefinitions": [{
+{"policyDefinitions": [{
         "groupNames": [],
         "parameters": {},
         "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/48c5f1cb-14ad-4797-8e3b-f78ab3f8d700",
@@ -106,4 +106,4 @@
     }],
     "policyType": "Custom",
     "type": "Microsoft.Authorization/policySetDefinitions"
-}]
+}

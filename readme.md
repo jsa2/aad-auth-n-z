@@ -303,6 +303,14 @@ https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certific
 
 #### Auditing local authentication with Azure Policy
 
+```shell
+
+az policy set-definition create -n Local_Authentication_Audit_Set \
+    --subscription '0b1f6471-1bf0-4dda-aec3-111122223333' \
+    --definitions @
+
+```
+
 
 ## Contribution
 Feel free to submit pull request for fixing, or adding anything in this document 
