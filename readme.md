@@ -302,12 +302,12 @@ https://securecloud.blog/2021/01/15/azure-api-management-enforce-use-of-certific
 
 
 #### Auditing local authentication with Azure Policy
+- AZ CLI in bash based on [az policy set-definition](https://docs.microsoft.com/en-us/cli/azure/policy/set-definition?view=azure-cli-latest#az-policy-set-definition-create-examples)
 
 ```shell
-def$(curl 'https://raw.githubusercontent.com/jsa2/aad-auth-n-z/main/guides/localAuthPolicy/localAuthDef.json')
-az policy set-definition create -n Local_Authentication_Audit_Set \
+az policy set-definition create -n Audit_Local_Authentication_Audit_Set \
 --subscription '3539c2a2-cd25-48c6-b295-14e59334ef1c' \
---definitions `@https://raw.githubusercontent.com/jsa2/aad-auth-n-z/main/guides/localAuthPolicy/localAuthDef.json`
+--definitions https://raw.githubusercontent.com/jsa2/aad-auth-n-z/main/guides/localAuthPolicy/localAuthd.json
 
 ```
 
